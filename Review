@@ -43,7 +43,7 @@ def get_filters():
 
     # TO DO: get user input on what day they want data on.            
     while True:
-        days= ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
         day = input('Please enter the day you would like additional information on:\n>>> ', ).lower()
         if day not in days:
             print('"{}" is not a valid day. Please try again.'.format(day))
@@ -72,9 +72,9 @@ def load_data(city, month, day):
   df['Start Time'] = pd.to_datetime(df['Start Time'])
 
     # extract month and day of the week from Start Time to create new columns
-  df['month'] = df['Start Time'].dt.month
-  df['day_of_week'] = df['Start Time'].df.weekday_name
-  df['hour'] = ['Start Time'].df.hour
+  df['Month'] = df['Start Time'].dt.month()
+  df['Day'] = dt['Start Time'].dt.day_name()
+  df['Hour'] = df['Start Time'].df.hour
 
     # filter by month if applicable
   if month != 'None':
@@ -88,7 +88,8 @@ def load_data(city, month, day):
     # filter by day of week if applicable
   if day != 'None':
         # filter by day of week to create the new dataframe
-        df = df[df['day_of_week']==day]
+        df = df[df['Day']==day]
+  
 
   return df 
     
