@@ -3,9 +3,6 @@ import time
 import pandas as pd
 import numpy as np
 
-
-
-
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
@@ -54,10 +51,8 @@ def get_filters():
         else:
             break
 
-
     print('-'*40)
     return city, month, day
-
 
 def load_data(city, month, day):
   """
@@ -70,7 +65,6 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
-
     
   df = pd.read_csv(CITY_DATA[city])
     
@@ -79,7 +73,8 @@ def load_data(city, month, day):
 
     # extract month and day of the week from Start Time to create new columns
   df['month'] = df['Start Time'].dt.month
-  df['day_of_week'] = df['Start Time'].dt.weekday_name
+  df['day_of_week'] = df['Start Time'].df.weekday_name
+  df['hour'] = ['Start Time'].df.hour
 
     # filter by month if applicable
   if month != 'None':
@@ -97,7 +92,7 @@ def load_data(city, month, day):
 
   return df 
     
-def time_stats(df, month, day, hour):
+def time_stats(df):
     """Displays statistics on the most frequent times of travel."""
 
     print('\nCalculating The Most Frequent Times of Travel...\n')
@@ -116,12 +111,11 @@ def time_stats(df, month, day, hour):
         pop_day= df['day_of_week'].mode()[0]
         print("The most Popular day is",pop_day)
 
-
    #TO DO: display the most common start hour
-    df['Start Hour'] = df['Start Time'].dt.hour
-    common_hour = df['Start Hour'].mode()[0]
-    print("The common Start Hour is {}:00 hrs".format(common_hour))
-
+    
+    df['hour'] = df['Start Time'].dt.hour
+    most_common_start_hour = df['hour'].value_counts().idxmax()
+    print("The most common start hour is :", most_common_start_hour)
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
@@ -148,10 +142,8 @@ def station_stats(df):
     print("The most frequent combination of Start and End Station is {} ".format(popp_com))
 
 
-
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-
 
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
@@ -165,7 +157,6 @@ def trip_duration_stats(df):
     hour,minute=divmod(minute,60)
     print("The total trip duration was: {} hour(s) {} minute(s) {} second(s)".format(hour,minute,second))
 
-
     # TO DO: display mean travel time
     average_duration=round(df['Trip Duration'].mean())
     m,sec=divmod(average_duration,60)
@@ -178,10 +169,8 @@ def trip_duration_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
-
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
-
 
 def user_stats(df):
     """Displays statistics on bikeshare users."""
@@ -194,7 +183,13 @@ def user_stats(df):
     print("The counts of each gender is: \n", gender_counts)
 
     # TO DO: Display counts of gender
-  
+    print("Counts of gender:\n")
+    gender_counts = df['Gender'].value_counts()
+    # iteratively print out the total numbers of genders 
+    for index,gender_count   in enumerate(gender_counts):
+        print("  {}: {}".format(gender_counts.index[index], gender_count))
+    
+    print()
 
     # TO DO: Display earliest, most recent, and most common year of birth
     earliest = int(df['Birth Year'].min())
@@ -207,11 +202,10 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
-
 def main():
     while True:
-        city, month, day, hour = get_filters()
-        df = load_data(city, month, day, hour)
+        city, month, day = get_filters()
+        df = load_data(city, month, day)
 
         time_stats(df, month, day, hour)
         station_stats(df)
@@ -222,7 +216,6 @@ def main():
         restart = input('\nWould you like to restart? Enter Yes or No.\n')
         if restart.lower() != 'yes':
             break
-
 
 if __name__ == "__main__":
 	main()
