@@ -1,7 +1,8 @@
 import calendar
-import time
+import datetime as dt
 import pandas as pd
 import numpy as np
+import time
 
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
@@ -25,9 +26,9 @@ def get_filters():
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     while True:
         cities= ['chicago', 'new york city', 'washington']
-        city = input('Please choose a city one of the following cities: Chicago, New York City, and Washington:\n>>> ').lower()
+        city = input('Please choose one of the following cities: Chicago, New York City, and Washington:\n>>> ').lower()
         if city not in cities:
-            print('"{}" is currently not a city we have information on.'.format(city))
+            print('"{}" is currently not a city we have information on. Please try again.'.format(city))
             continue
         else:
             break
@@ -36,7 +37,7 @@ def get_filters():
         months= ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
         month = input('Please enter the month you would like additional information on:\n>>> ' ).lower()
         if month not in months:
-            print('"{}" is not a valid month. Please try again.' .format(month))
+            print('"{}" is not a valid month. Please try another month.' .format(month))
             continue
         else:
             break
@@ -46,7 +47,7 @@ def get_filters():
         days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
         day = input('Please enter the day you would like additional information on:\n>>> ', ).lower()
         if day not in days:
-            print('"{}" is not a valid day. Please try again.'.format(day))
+            print('"{}" is not a valid day. Please choose another day.'.format(day))
             continue
         else:
             break
@@ -72,13 +73,12 @@ def load_data(city, month, day):
   df['Start Time'] = pd.to_datetime(df['Start Time'])
 
     # extract month and day of the week from Start Time to create new columns
-  df['Month'] = df['Start Time'].dt.month()
-  df['Day'] = dt['Start Time'].dt.day_name()
-  df['Hour'] = df['Start Time'].df.hour
+  df['month'] = df['Start Time'].dt.month
+  df['weekday'] = df['Start Time'].dt.day_name()
+  df['hour'] = df['Start Time'].dt.hour
 
     # filter by month if applicable
   if month != 'None':
-        # use the index of the months list to get the corresponding:
         months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
         month = months.index(month)+1
     
@@ -88,7 +88,7 @@ def load_data(city, month, day):
     # filter by day of week if applicable
   if day != 'None':
         # filter by day of week to create the new dataframe
-        df = df[df['Day']==day]
+        df = df[df['weekday']==day]
   
 
   return df 
@@ -100,16 +100,17 @@ def time_stats(df):
     start_time = time.time()
 
     # TO DO: display the most common month
+  
     if month =='None':
-        pop_month= df['month'].mode()[0]
+        pop_month = df['month'].mode()[0]
         months= ['January','February','March','April','May','June', 'July', 'August', 'September', 'October', 'November', 'December']
         pop_month= months[pop_month-1]
-        print("The most Popular month is",pop_month)
+        print("The most Popular month is", pop_month)
 
 
      # TO DO: display the most common day of week
     if day =='None':
-        pop_day= df['day_of_week'].mode()[0]
+        pop_day= df['weekday'].mode()[0]
         print("The most Popular day is",pop_day)
 
    #TO DO: display the most common start hour
@@ -208,7 +209,7 @@ def main():
         city, month, day = get_filters()
         df = load_data(city, month, day)
 
-        time_stats(df, month, day, hour)
+        time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df,city)
