@@ -9,7 +9,7 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'washington': 'washington.csv' }
 
 months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
-days = ['None', 'monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 cities = ['chicago', 'new york city', 'washington']
 
 def get_filters():
@@ -78,7 +78,7 @@ def load_data(city, month, day):
   df['hour'] = df['Start Time'].dt.hour
 
     # filter by month if applicable
-  if month != 'None':
+  if month != 'All':
         months = ['january', 'february', 'march', 'april', 'may', 'june']
         month = months.index(month)+1
     
@@ -86,7 +86,7 @@ def load_data(city, month, day):
         df = df[df['month']==month] 
 
     # filter by day of week if applicable
-  if day != 'None':
+  if day != 'All':
         # filter by day of week to create the new dataframe
         df = df[df['weekday']==day.title()]
   
