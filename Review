@@ -9,7 +9,7 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'washington': 'washington.csv' }
 
 months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'all']
-days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
 cities = ['chicago', 'new york city', 'washington']
 
 def get_filters():
@@ -34,17 +34,17 @@ def get_filters():
             break
     # TO DO: get user input on what month they want data on.
     while True:
-        months= ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'all']
+        months= ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'all']
         month = input('Please enter the month you would like additional information on:\n>>> ' ).lower()
         if month not in months:
-            print('"{}" is not a valid month. Please choose one of the following: January, February, March, April, May, June, July, August, Septemeber, October, Novermber or December.' .format(month))
+            print('"{}" is not a valid month. Please choose one of the following: January, February, March, April, May, June' .format(month))
             continue
         else:
             break
 
     # TO DO: get user input on what day they want data on.            
     while True:
-        days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        days = ['monday', 'tuesday', ' wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
         day = input('Please enter the day you would like additional information on:\n>>> ', ).lower()
         if day not in days:
             print('"{}" is not a valid day. Please choose one of the following: Monday, Tuesday, Wednesday, Thursday, Froday, Saturday or Sunday.'.format(day))
@@ -78,7 +78,7 @@ def load_data(city, month, day):
   df['hour'] = df['Start Time'].dt.hour
 
     # filter by month if applicable
-  if month != 'All':
+  if month != 'all':
         months = ['january', 'february', 'march', 'april', 'may', 'june']
         month = months.index(month)+1
     
@@ -86,7 +86,7 @@ def load_data(city, month, day):
         df = df[df['month']==month] 
 
     # filter by day of week if applicable
-  if day != 'All':
+  if day != 'all':
         # filter by day of week to create the new dataframe
         df = df[df['weekday']==day.title()]
   
@@ -213,19 +213,24 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
     
-    
-    view_data = input('\nWould you like to view 5 rows of individual trip data? Enter yes or no\n')
-    start_loc = 0
-    ask = True
+def display_raw_data(df):
+    """ Your docstring here """
+    start_location = 0
+    raw = input("Would you like to see 5 more rows of data? ").lower()# TO DO: convert the user input to lower case using lower() function
+    pd.set_option('display.max_columns',200)
 
-    while (ask):
-        print(df.iloc[start_loc:start_loc +5])
-        start_loc += 5
-        view_data = input("Do you wish to continue?: ").lower()
-        if view_display == "no":
-          ask != True
+    while True:            
+        if raw == 'no':
+            break
+        elif raw == 'yes':
+            print(df.iloc[start_location:start_location +5])
+            raw = input("Would you like to see 5 more additional rows of data: \n").lower() 
+            start_location += 5
+        else:
+            raw = input("\nYour input is not valid. Please enter 'yes' or 'no' to continue.\n").lower()
     
 def main():
+    
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
@@ -234,7 +239,11 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+        display_raw_data(df)
  
+        restart = input('\nWould you like to restart? Enter yes or no.\n')
+        if restart.lower() != 'yes':
+            break
 
         
 if __name__ == "__main__":
